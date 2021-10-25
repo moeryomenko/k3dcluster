@@ -17,5 +17,5 @@ case $1 in
 		rm kubectl.sha256
 		chmod +x kubectl
 		mv kubectl ${GOPATH}/bin
-	;;
+		;;
 esac
