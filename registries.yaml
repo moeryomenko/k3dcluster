@@ -1,0 +1,7 @@
+mirrors:
+  "docker.io":
+    endpoint:
+      - http://host.k3d.internal:5000
+  "host.k3d.internal:5000":
+    endpoint:
+      - http://host.k3d.internal:5000
