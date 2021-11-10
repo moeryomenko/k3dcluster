@@ -1,7 +1,7 @@
 PLATFORM=$(uname -s | tr A-Z a-z)
 ARCH=$([[ $(uname -m) == arm64 ]] && echo arm64 || echo amd64)
 KUBECTL_VERSION=$(curl -L -s https://dl.k8s.io/release/stable.txt)
-HELM_VERSION=2.17.0
+HELM_VERSION=3.7.1
 GOPATH=$(go env GOPATH)
 
 case $1 in
