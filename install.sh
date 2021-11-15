@@ -2,6 +2,7 @@ PLATFORM=$(uname -s | tr A-Z a-z)
 ARCH=$([[ $(uname -m) == arm64 ]] && echo arm64 || echo amd64)
 KUBECTL_VERSION=$(curl -L -s https://dl.k8s.io/release/stable.txt)
 HELM_VERSION=3.7.1
+VM_VERSION=$(basename $(curl -fs -o/dev/null -w %{redirect_url} https://github.com/VictoriaMetrics/operator/releases/latest))
 GOPATH=$(go env GOPATH)
 
 case $1 in
@@ -17,5 +18,10 @@ case $1 in
 		rm kubectl.sha256
 		chmod +x kubectl
 		mv kubectl ${GOPATH}/bin
+		;;
+	"vm")
+		helm repo add vm https://victoriametrics.github.io/helm-charts/
+		helm repo update
+		helm install operator vm/victoria-metrics-operator
 		;;
 esac
