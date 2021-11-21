@@ -25,4 +25,9 @@ case $1 in
 		helm repo update
 		helm install operator vm/victoria-metrics-operator
 		;;
+	"netdata")
+		helm repo add netdata https://netdata.github.io/helmchart/
+		helm repo update
+		helm install netdata netdata/netdata
+		;;
 esac
