@@ -5,6 +5,8 @@ ARCH=$([[ $(uname -m) == arm64 ]] && echo arm64 || echo amd64)
 KUBECTL_VERSION=$(curl -L -s https://dl.k8s.io/release/stable.txt)
 HELM_VERSION=3.7.1
 GOPATH=$(go env GOPATH)
+GL_PLATFORM=kubernetes
+GL_OPERATOR_VERSION=0.2.0 # https://gitlab.com/gitlab-org/cloud-native/gitlab-operator/-/releases
 
 case $1 in
 	"helm")
@@ -29,5 +31,26 @@ case $1 in
 		helm repo add netdata https://netdata.github.io/helmchart/
 		helm repo update
 		helm install netdata netdata/netdata
+		;;
+	"cert-manager")
+		# helm repo add jetstack https://charts.jetstack.io
+		# helm repo update
+		# helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --version v1.2.0 --set installCRDs=true
+		kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.6.1/cert-manager.yaml
+		;;
+	"gitlab")
+		kubectl create namespace gitlab-system
+		kubectl apply -f https://gitlab.com/api/v4/projects/18899486/packages/generic/gitlab-operator/${GL_OPERATOR_VERSION}/gitlab-operator-${GL_PLATFORM}-${GL_OPERATOR_VERSION}.yaml
+		;;
+	"argocd")
+		kubectl create namespace argocd
+		kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+		;;
+	"ambassador")
+		helm repo add datawire https://app.getambassador.io
+		helm repo update
+		kubectl create namespace ambassador
+		helm install --devel edge-stack --namespace ambassador datawire/edge-stack
+		kubectl -n ambassador wait --for condition=available --timeout=90s deploy -lproduct=aes
 		;;
 esac
