@@ -46,6 +46,8 @@ case $1 in
 		kubectl apply -f https://gitlab.com/api/v4/projects/18899486/packages/generic/gitlab-operator/${GL_OPERATOR_VERSION}/gitlab-operator-${GL_PLATFORM}-${GL_OPERATOR_VERSION}.yaml
 		;;
 	"argocd")
+		curl -sSL -o ${GOPATH}/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-${PLATFORM}-${ARCH}
+		chmod +x ${GOPATH}/bin/argocd
 		kubectl create namespace argocd
 		kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 		;;
