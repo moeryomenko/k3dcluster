@@ -61,4 +61,8 @@ case $1 in
 		helm install --devel edge-stack --namespace ambassador datawire/edge-stack
 		kubectl -n ambassador wait --for condition=available --timeout=90s deploy -lproduct=aes
 		;;
+	"chaos")
+		helm repo add chaos-mesh https://charts.chaos-mesh.org
+		helm install chaos-mesh chaos-mesh/chaos-mesh -n=chaos-testing --set chaosDaemon.runtime=containerd --set chaosDaemon.socketPath=/run/k3s/containerd/containerd.sock --version 2.0.5
+		;;
 esac
