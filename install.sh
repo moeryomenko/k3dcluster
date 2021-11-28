@@ -63,6 +63,7 @@ case $1 in
 		;;
 	"chaos")
 		helm repo add chaos-mesh https://charts.chaos-mesh.org
+		kubectl create ns chaos-testing
 		helm install chaos-mesh chaos-mesh/chaos-mesh -n=chaos-testing --set chaosDaemon.runtime=containerd --set chaosDaemon.socketPath=/run/k3s/containerd/containerd.sock --version 2.0.5
 		;;
 esac
