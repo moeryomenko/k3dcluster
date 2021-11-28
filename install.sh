@@ -4,6 +4,7 @@ PLATFORM=$(uname -s | tr A-Z a-z)
 ARCH=$([[ $(uname -m) == arm64 ]] && echo arm64 || echo amd64)
 KUBECTL_VERSION=$(curl -L -s https://dl.k8s.io/release/stable.txt)
 HELM_VERSION=3.7.1
+TKN_VERSION=0.21.0
 GOPATH=$(go env GOPATH)
 GL_PLATFORM=kubernetes
 GL_OPERATOR_VERSION=0.2.0 # https://gitlab.com/gitlab-org/cloud-native/gitlab-operator/-/releases
@@ -22,6 +23,9 @@ case $1 in
 		chmod +x kubectl
 		mv kubectl ${GOPATH}/bin
 		;;
+	"tkn")
+		curl -SL https://github.com/tektoncd/cli/releases/download/v${TKN_VERSION}/tkn_${TKN_VERSION}_`uname -s`_`uname -m`.tar.gz | tar -xz -C ${GOPATH}/bin
+		;;
 	"vm")
 		helm repo add vm https://victoriametrics.github.io/helm-charts/
 		helm repo update
@@ -33,10 +37,9 @@ case $1 in
 		helm install netdata netdata/netdata
 		;;
 	"cert-manager")
-		# helm repo add jetstack https://charts.jetstack.io
-		# helm repo update
-		# helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --version v1.2.0 --set installCRDs=true
-		kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.6.1/cert-manager.yaml
+		helm repo add jetstack https://charts.jetstack.io
+		helm repo update
+		helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --version v1.2.0 --set installCRDs=true
 		;;
 	"gitlab")
 		kubectl create namespace gitlab-system
@@ -45,6 +48,9 @@ case $1 in
 	"argocd")
 		kubectl create namespace argocd
 		kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+		;;
+	"tekton")
+		echo "don't implemeted"
 		;;
 	"ambassador")
 		helm repo add datawire https://app.getambassador.io
